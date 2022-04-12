@@ -207,7 +207,36 @@ class SocialSharePlugin(private val registrar: Registrar):  MethodCallHandler {
             apps["telegram"] = packages.any  { it.packageName.toString().contentEquals("org.telegram.messenger") }
 
             result.success(apps)
-        } else {
+        } else if (call.method == "shareTikTok") {
+            //native share options
+            val content: String? = call.argument("content")
+            val image: String? = call.argument("image")
+            val intent = Intent()
+            intent.action = Intent.ACTION_SEND
+
+            if (image!=null) {
+                //check if  image is also provided
+                val imagefile =  File(registrar.activeContext().cacheDir,image)
+                val imageFileUri = FileProvider.getUriForFile(registrar.activeContext(), registrar.activeContext().applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
+                intent.type = "image/*"
+                intent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
+            } else {
+                intent.type = "text/plain";
+            }
+            intent.putExtra(Intent.EXTRA_TEXT, content)
+            intent.setPackage("com.zhiliaoapp.musically")
+          
+
+            //create chooser intent to launch intent
+            //source: "share" package by flutter (https://github.com/flutter/plugins/blob/master/packages/share/)
+              try {
+                registrar.activity().startActivity(intent)
+                result.success("true")
+            } catch (ex: ActivityNotFoundException) {
+                result.success("false")
+            }
+
+        }  else {
             result.notImplemented()
         }
     }

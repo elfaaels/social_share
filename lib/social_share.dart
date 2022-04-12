@@ -115,13 +115,15 @@ class SocialShare {
       args = <String, dynamic>{
         "captionText": captionText + "\n" + tags.toString(),
         "url": modifiedUrl,
-        "trailingText": (trailingText == null || trailingText.isEmpty) ? "" : trailingText
+        "trailingText":
+            (trailingText == null || trailingText.isEmpty) ? "" : trailingText
       };
     } else {
       args = <String, dynamic>{
         "captionText": captionText + " ",
         "url": modifiedUrl,
-        "trailingText": (trailingText == null || trailingText.isEmpty) ? "" : trailingText
+        "trailingText":
+            (trailingText == null || trailingText.isEmpty) ? "" : trailingText
       };
     }
     final String version = await _channel.invokeMethod('shareTwitter', args);
@@ -199,6 +201,31 @@ class SocialShare {
   static Future<String> shareTelegram(String content) async {
     final Map<String, dynamic> args = <String, dynamic>{"content": content};
     final String version = await _channel.invokeMethod('shareTelegram', args);
+    return version;
+  }
+
+  static Future<bool> shareTikTok(String contentText,
+      {String imagePath}) async {
+    Map<String, dynamic> args;
+    if (Platform.isIOS) {
+      args = <String, dynamic>{"image": imagePath, "content": contentText};
+    } else {
+      if (imagePath != null) {
+        File file = File(imagePath);
+        Uint8List bytes = file.readAsBytesSync();
+        var imagedata = bytes.buffer.asUint8List();
+        final tempDir = await getTemporaryDirectory();
+        String imageName = 'stickerAsset.png';
+        final Uint8List imageAsList = imagedata;
+        final imageDataPath = '${tempDir.path}/$imageName';
+        file = await File(imageDataPath).create();
+        file.writeAsBytesSync(imageAsList);
+        args = <String, dynamic>{"image": imageName, "content": contentText};
+      } else {
+        args = <String, dynamic>{"image": imagePath, "content": contentText};
+      }
+    }
+    final bool version = await _channel.invokeMethod('shareTikTok', args);
     return version;
   }
 

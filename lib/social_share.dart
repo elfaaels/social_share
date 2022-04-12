@@ -204,7 +204,7 @@ class SocialShare {
     return version;
   }
 
-  static Future<bool> shareTikTok(String contentText,
+  static Future<String> shareTikTok(String contentText,
       {String imagePath}) async {
     Map<String, dynamic> args;
     if (Platform.isIOS) {
@@ -225,7 +225,7 @@ class SocialShare {
         args = <String, dynamic>{"image": imagePath, "content": contentText};
       }
     }
-    final bool version = await _channel.invokeMethod('shareTikTok', args);
+    final String version = await _channel.invokeMethod('shareTikTok', args);
     return version;
   }
 

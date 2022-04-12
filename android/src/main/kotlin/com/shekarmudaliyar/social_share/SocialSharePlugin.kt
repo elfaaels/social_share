@@ -220,21 +220,23 @@ class SocialSharePlugin(private val registrar: Registrar):  MethodCallHandler {
                 val imageFileUri = FileProvider.getUriForFile(registrar.activeContext(), registrar.activeContext().applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
                 intent.type = "image/*"
                 intent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             } else {
                 intent.type = "text/plain";
             }
             intent.putExtra(Intent.EXTRA_TEXT, content)
-            intent.setPackage("com.zhiliaoapp.musically")
-          
-
+            intent.setPackage("com.ss.android.ugc.trill")
+            val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
+            registrar.activeContext().startActivity(chooserIntent)
+            result.success("true")
             //create chooser intent to launch intent
             //source: "share" package by flutter (https://github.com/flutter/plugins/blob/master/packages/share/)
-              try {
-                registrar.activity().startActivity(intent)
-                result.success("true")
-            } catch (ex: ActivityNotFoundException) {
-                result.success("false")
-            }
+            //try {
+                //registrar.activity().startActivity(intent)
+               /// result.success("true")
+            //} catch (ex: ActivityNotFoundException) {
+                //result.success("false")
+            //}
 
         }  else {
             result.notImplemented()

@@ -203,6 +203,7 @@ class SocialSharePlugin(private val registrar: Registrar):  MethodCallHandler {
             apps["instagram"] = packages.any  { it.packageName.toString().contentEquals("com.instagram.android") }
             apps["facebook"] = packages.any  { it.packageName.toString().contentEquals("com.facebook.katana") }
             apps["twitter"] = packages.any  { it.packageName.toString().contentEquals("com.twitter.android") }
+            apps["linkedin"] = packages.any  { it.packageName.toString().contentEquals("com.linkedin.android") }
             apps["whatsapp"] = packages.any  { it.packageName.toString().contentEquals("com.whatsapp") }
             apps["telegram"] = packages.any  { it.packageName.toString().contentEquals("org.telegram.messenger") }
 
@@ -238,6 +239,28 @@ class SocialSharePlugin(private val registrar: Registrar):  MethodCallHandler {
                 //result.success("false")
             //}
 
+        }else if (call.method == "shareLinkedin") {
+            //native share options
+            val content: String? = call.argument("content")
+            val image: String? = call.argument("image")
+            val intent = Intent()
+            intent.action = Intent.ACTION_SEND
+
+            if (image!=null) {
+                //check if  image is also provided
+                val imagefile =  File(registrar.activeContext().cacheDir,image)
+                val imageFileUri = FileProvider.getUriForFile(registrar.activeContext(), registrar.activeContext().applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
+                intent.type = "image/*"
+                intent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
+                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            } else {
+                intent.type = "text/plain";
+            }
+            intent.putExtra(Intent.EXTRA_TEXT, content)
+            intent.setPackage("com.linkedin.android")
+            val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
+            registrar.activeContext().startActivity(chooserIntent)
+            result.success("true")
         }  else {
             result.notImplemented()
         }

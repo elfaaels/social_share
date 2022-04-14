@@ -8,12 +8,12 @@ class SocialShare {
   static const MethodChannel _channel = const MethodChannel('social_share');
 
   static Future<String> shareInstagramStory(
-    String imagePath, {
-    String backgroundTopColor,
-    String backgroundBottomColor,
-    String attributionURL,
-    String backgroundImagePath,
-  }) async {
+      String imagePath, {
+        String backgroundTopColor,
+        String backgroundBottomColor,
+        String attributionURL,
+        String backgroundImagePath,
+      }) async {
     Map<String, dynamic> args;
     if (Platform.isIOS) {
       args = <String, dynamic>{
@@ -94,7 +94,7 @@ class SocialShare {
       };
     }
     final String response =
-        await _channel.invokeMethod('shareFacebookStory', args);
+    await _channel.invokeMethod('shareFacebookStory', args);
     return response;
   }
 
@@ -116,14 +116,14 @@ class SocialShare {
         "captionText": captionText + "\n" + tags.toString(),
         "url": modifiedUrl,
         "trailingText":
-            (trailingText == null || trailingText.isEmpty) ? "" : trailingText
+        (trailingText == null || trailingText.isEmpty) ? "" : trailingText
       };
     } else {
       args = <String, dynamic>{
         "captionText": captionText + " ",
         "url": modifiedUrl,
         "trailingText":
-            (trailingText == null || trailingText.isEmpty) ? "" : trailingText
+        (trailingText == null || trailingText.isEmpty) ? "" : trailingText
       };
     }
     final String version = await _channel.invokeMethod('shareTwitter', args);
@@ -226,6 +226,31 @@ class SocialShare {
       }
     }
     final String version = await _channel.invokeMethod('shareTikTok', args);
+    return version;
+  }
+
+  static Future<String> shareLinkedin(String contentText,
+      {String imagePath}) async {
+    Map<String, dynamic> args;
+    if (Platform.isIOS) {
+      args = <String, dynamic>{"image": imagePath, "content": contentText};
+    } else {
+      if (imagePath != null) {
+        File file = File(imagePath);
+        Uint8List bytes = file.readAsBytesSync();
+        var imagedata = bytes.buffer.asUint8List();
+        final tempDir = await getTemporaryDirectory();
+        String imageName = 'stickerAsset.png';
+        final Uint8List imageAsList = imagedata;
+        final imageDataPath = '${tempDir.path}/$imageName';
+        file = await File(imageDataPath).create();
+        file.writeAsBytesSync(imageAsList);
+        args = <String, dynamic>{"image": imageName, "content": contentText};
+      } else {
+        args = <String, dynamic>{"image": imagePath, "content": contentText};
+      }
+    }
+    final String version = await _channel.invokeMethod('shareLinkedin', args);
     return version;
   }
 

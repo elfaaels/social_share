@@ -281,6 +281,7 @@ class SocialSharePlugin(private val registrar: Registrar):  MethodCallHandler {
             val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
             registrar.activeContext().startActivity(chooserIntent)
             result.success("true")
+<<<<<<< HEAD
         }else if (call.method == "shareEmail") {
             //native share options
             val content: String? = call.argument("content")
@@ -326,6 +327,9 @@ class SocialSharePlugin(private val registrar: Registrar):  MethodCallHandler {
             registrar.activeContext().startActivity(chooserIntent)
             result.success("true")
         } else {
+=======
+        }  else {
+>>>>>>> 7cf5851d70d77986c5e8d8dc9bc4f410cd3af458
             result.notImplemented()
         }
     }

@@ -91,21 +91,14 @@ class _MyAppState extends State<MyApp> {
                     await screenshotController.capture().then((image) async {
                       //facebook appId is mandatory for andorid or else share won't work
                       Platform.isAndroid
-                          ? SocialShare.shareFacebookStory(
-                              image.path,
-                              "#ffffff",
-                              "#000000",
-                              "https://google.com",
-                              appId: "xxxxxxxxxxxxx",
-                            ).then((data) {
+                          ? SocialShare.shareFacebookStory(image.path,
+                                  imagePath: image.path)
+                              .then((data) {
                               print(data);
                             })
-                          : SocialShare.shareFacebookStory(
-                              image.path,
-                              "#ffffff",
-                              "#000000",
-                              "https://google.com",
-                            ).then((data) {
+                          : SocialShare.shareFacebookStory(image.path,
+                                  imagePath: image.path)
+                              .then((data) {
                               print(data);
                             });
                     });
@@ -126,9 +119,6 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () async {
                     SocialShare.shareTwitter(
                       "This is Social Share twitter example",
-                      hashtags: ["hello", "world", "foo", "bar"],
-                      url: "https://google.com/#/hello",
-                      trailingText: "\nhello",
                     ).then((data) {
                       print(data);
                     });

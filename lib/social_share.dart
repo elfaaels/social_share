@@ -8,12 +8,12 @@ class SocialShare {
   static const MethodChannel _channel = const MethodChannel('social_share');
 
   static Future<String> shareInstagramStory(
-      String imagePath, {
-        String backgroundTopColor,
-        String backgroundBottomColor,
-        String attributionURL,
-        String backgroundImagePath,
-      }) async {
+    String imagePath, {
+    String backgroundTopColor,
+    String backgroundBottomColor,
+    String attributionURL,
+    String backgroundImagePath,
+  }) async {
     Map<String, dynamic> args;
     if (Platform.isIOS) {
       args = <String, dynamic>{
@@ -61,70 +61,52 @@ class SocialShare {
     return response;
   }
 
-  static Future<String> shareFacebookStory(
-      String imagePath,
-      String backgroundTopColor,
-      String backgroundBottomColor,
-      String attributionURL,
-      {String appId}) async {
+  static Future<String> shareFacebookStory(String contentText,
+      {String imagePath}) async {
     Map<String, dynamic> args;
     if (Platform.isIOS) {
-      args = <String, dynamic>{
-        "stickerImage": imagePath,
-        "backgroundTopColor": backgroundTopColor,
-        "backgroundBottomColor": backgroundBottomColor,
-        "attributionURL": attributionURL,
-      };
+      args = <String, dynamic>{"image": imagePath, "content": contentText};
     } else {
-      File file = File(imagePath);
-      Uint8List bytes = file.readAsBytesSync();
-      var stickerdata = bytes.buffer.asUint8List();
-      final tempDir = await getTemporaryDirectory();
-      String stickerAssetName = 'stickerAsset.png';
-      final Uint8List stickerAssetAsList = stickerdata;
-      final stickerAssetPath = '${tempDir.path}/$stickerAssetName';
-      file = await File(stickerAssetPath).create();
-      file.writeAsBytesSync(stickerAssetAsList);
-      args = <String, dynamic>{
-        "stickerImage": stickerAssetName,
-        "backgroundTopColor": backgroundTopColor,
-        "backgroundBottomColor": backgroundBottomColor,
-        "attributionURL": attributionURL,
-        "appId": appId
-      };
+      if (imagePath != null) {
+        File file = File(imagePath);
+        Uint8List bytes = file.readAsBytesSync();
+        var imagedata = bytes.buffer.asUint8List();
+        final tempDir = await getTemporaryDirectory();
+        String imageName = 'stickerAsset.png';
+        final Uint8List imageAsList = imagedata;
+        final imageDataPath = '${tempDir.path}/$imageName';
+        file = await File(imageDataPath).create();
+        file.writeAsBytesSync(imageAsList);
+        args = <String, dynamic>{"image": imageName, "content": contentText};
+      } else {
+        args = <String, dynamic>{"image": imagePath, "content": contentText};
+      }
     }
     final String response =
-    await _channel.invokeMethod('shareFacebookStory', args);
+        await _channel.invokeMethod('shareFacebookStory', args);
     return response;
   }
 
   static Future<String> shareTwitter(String captionText,
-      {List<String> hashtags, String url, String trailingText}) async {
+      {String imagePath}) async {
     Map<String, dynamic> args;
-    String modifiedUrl;
-    if (Platform.isAndroid) {
-      modifiedUrl = Uri.parse(url).toString().replaceAll('#', "%23");
+    if (Platform.isIOS) {
+      args = <String, dynamic>{"image": imagePath, "content": captionText};
     } else {
-      modifiedUrl = Uri.parse(url).toString();
-    }
-    if (hashtags != null && hashtags.isNotEmpty) {
-      String tags = "";
-      hashtags.forEach((f) {
-        tags += ("%23" + f.toString() + " ").toString();
-      });
-      args = <String, dynamic>{
-        "captionText": captionText + "\n" + tags.toString(),
-        "url": modifiedUrl,
-        "trailingText":
-        (trailingText == null || trailingText.isEmpty) ? "" : trailingText
-      };
-    } else {
-      args = <String, dynamic>{
-        "captionText": captionText + " ",
-        "url": modifiedUrl,
-        "trailingText":
-        (trailingText == null || trailingText.isEmpty) ? "" : trailingText
-      };
+      if (imagePath != null) {
+        File file = File(imagePath);
+        Uint8List bytes = file.readAsBytesSync();
+        var imagedata = bytes.buffer.asUint8List();
+        final tempDir = await getTemporaryDirectory();
+        String imageName = 'stickerAsset.png';
+        final Uint8List imageAsList = imagedata;
+        final imageDataPath = '${tempDir.path}/$imageName';
+        file = await File(imageDataPath).create();
+        file.writeAsBytesSync(imageAsList);
+        args = <String, dynamic>{"image": imageName, "content": captionText};
+      } else {
+        args = <String, dynamic>{"image": imagePath, "content": captionText};
+      }
     }
     final String version = await _channel.invokeMethod('shareTwitter', args);
     return version;
@@ -187,8 +169,27 @@ class SocialShare {
     return version;
   }
 
-  static Future<String> shareWhatsapp(String content) async {
-    final Map<String, dynamic> args = <String, dynamic>{"content": content};
+  static Future<String> shareWhatsapp(String contentText,
+      {String imagePath}) async {
+    Map<String, dynamic> args;
+    if (Platform.isIOS) {
+      args = <String, dynamic>{"image": imagePath, "content": contentText};
+    } else {
+      if (imagePath != null) {
+        File file = File(imagePath);
+        Uint8List bytes = file.readAsBytesSync();
+        var imagedata = bytes.buffer.asUint8List();
+        final tempDir = await getTemporaryDirectory();
+        String imageName = 'stickerAsset.png';
+        final Uint8List imageAsList = imagedata;
+        final imageDataPath = '${tempDir.path}/$imageName';
+        file = await File(imageDataPath).create();
+        file.writeAsBytesSync(imageAsList);
+        args = <String, dynamic>{"image": imageName, "content": contentText};
+      } else {
+        args = <String, dynamic>{"image": imagePath, "content": contentText};
+      }
+    }
     final String version = await _channel.invokeMethod('shareWhatsapp', args);
     return version;
   }
@@ -198,8 +199,27 @@ class SocialShare {
     return apps;
   }
 
-  static Future<String> shareTelegram(String content) async {
-    final Map<String, dynamic> args = <String, dynamic>{"content": content};
+  static Future<String> shareTelegram(String contentText,
+      {String imagePath}) async {
+    Map<String, dynamic> args;
+    if (Platform.isIOS) {
+      args = <String, dynamic>{"image": imagePath, "content": contentText};
+    } else {
+      if (imagePath != null) {
+        File file = File(imagePath);
+        Uint8List bytes = file.readAsBytesSync();
+        var imagedata = bytes.buffer.asUint8List();
+        final tempDir = await getTemporaryDirectory();
+        String imageName = 'stickerAsset.png';
+        final Uint8List imageAsList = imagedata;
+        final imageDataPath = '${tempDir.path}/$imageName';
+        file = await File(imageDataPath).create();
+        file.writeAsBytesSync(imageAsList);
+        args = <String, dynamic>{"image": imageName, "content": contentText};
+      } else {
+        args = <String, dynamic>{"image": imagePath, "content": contentText};
+      }
+    }
     final String version = await _channel.invokeMethod('shareTelegram', args);
     return version;
   }
@@ -251,6 +271,56 @@ class SocialShare {
       }
     }
     final String version = await _channel.invokeMethod('shareLinkedin', args);
+    return version;
+  }
+
+  static Future<String> shareEmail(String contentText,
+      {String imagePath}) async {
+    Map<String, dynamic> args;
+    if (Platform.isIOS) {
+      args = <String, dynamic>{"image": imagePath, "content": contentText};
+    } else {
+      if (imagePath != null) {
+        File file = File(imagePath);
+        Uint8List bytes = file.readAsBytesSync();
+        var imagedata = bytes.buffer.asUint8List();
+        final tempDir = await getTemporaryDirectory();
+        String imageName = 'stickerAsset.png';
+        final Uint8List imageAsList = imagedata;
+        final imageDataPath = '${tempDir.path}/$imageName';
+        file = await File(imageDataPath).create();
+        file.writeAsBytesSync(imageAsList);
+        args = <String, dynamic>{"image": imageName, "content": contentText};
+      } else {
+        args = <String, dynamic>{"image": imagePath, "content": contentText};
+      }
+    }
+    final String version = await _channel.invokeMethod('shareEmail', args);
+    return version;
+  }
+
+  static Future<String> shareLine(String contentText,
+      {String imagePath}) async {
+    Map<String, dynamic> args;
+    if (Platform.isIOS) {
+      args = <String, dynamic>{"image": imagePath, "content": contentText};
+    } else {
+      if (imagePath != null) {
+        File file = File(imagePath);
+        Uint8List bytes = file.readAsBytesSync();
+        var imagedata = bytes.buffer.asUint8List();
+        final tempDir = await getTemporaryDirectory();
+        String imageName = 'stickerAsset.png';
+        final Uint8List imageAsList = imagedata;
+        final imageDataPath = '${tempDir.path}/$imageName';
+        file = await File(imageDataPath).create();
+        file.writeAsBytesSync(imageAsList);
+        args = <String, dynamic>{"image": imageName, "content": contentText};
+      } else {
+        args = <String, dynamic>{"image": imagePath, "content": contentText};
+      }
+    }
+    final String version = await _channel.invokeMethod('shareLine', args);
     return version;
   }
 

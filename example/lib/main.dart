@@ -59,12 +59,9 @@ class _MyAppState extends State<MyApp> {
                     File file = await ImagePicker.pickImage(
                       source: ImageSource.gallery,
                     );
-                    SocialShare.shareInstagramStory(
-                      file.path,
-                      backgroundTopColor: "#ffffff",
-                      backgroundBottomColor: "#000000",
-                      attributionURL: "https://deep-link-url",
-                    ).then((data) {
+                    SocialShare.shareInstagramStory("Content Instagram",
+                            imagePath: file.path)
+                        .then((data) {
                       print(data);
                     });
                   },
@@ -73,13 +70,9 @@ class _MyAppState extends State<MyApp> {
                 RaisedButton(
                   onPressed: () async {
                     await screenshotController.capture().then((image) async {
-                      SocialShare.shareInstagramStory(
-                        image.path,
-                        backgroundTopColor: "#ffffff",
-                        backgroundBottomColor: "#000000",
-                        attributionURL: "https://deep-link-url",
-                        backgroundImagePath: image.path,
-                      ).then((data) {
+                      SocialShare.shareInstagramStory("Content Instagram",
+                              imagePath: image.path)
+                          .then((data) {
                         print(data);
                       });
                     });

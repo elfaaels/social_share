@@ -7,58 +7,30 @@ import 'package:path_provider/path_provider.dart';
 class SocialShare {
   static const MethodChannel _channel = const MethodChannel('social_share');
 
-  static Future<String> shareInstagramStory(
-    String imagePath, {
-    String backgroundTopColor,
-    String backgroundBottomColor,
-    String attributionURL,
-    String backgroundImagePath,
-  }) async {
+  static Future<String> shareInstagramStory(String contentText,
+      {String imagePath}) async {
     Map<String, dynamic> args;
     if (Platform.isIOS) {
-      args = <String, dynamic>{
-        "stickerImage": imagePath,
-        "backgroundImage": backgroundImagePath,
-        "backgroundTopColor": backgroundTopColor,
-        "backgroundBottomColor": backgroundBottomColor,
-        "attributionURL": attributionURL
-      };
+      args = <String, dynamic>{"image": imagePath, "content": contentText};
     } else {
-      final tempDir = await getTemporaryDirectory();
-
-      File file = File(imagePath);
-      Uint8List bytes = file.readAsBytesSync();
-      var stickerData = bytes.buffer.asUint8List();
-      String stickerAssetName = 'stickerAsset.png';
-      final Uint8List stickerAssetAsList = stickerData;
-      final stickerAssetPath = '${tempDir.path}/$stickerAssetName';
-      file = await File(stickerAssetPath).create();
-      file.writeAsBytesSync(stickerAssetAsList);
-
-      String backgroundAssetName;
-      if (backgroundImagePath != null) {
-        File backgroundImage = File(backgroundImagePath);
-        Uint8List backgroundImageData = backgroundImage.readAsBytesSync();
-        backgroundAssetName = 'backgroundAsset.jpg';
-        final Uint8List backgroundAssetAsList = backgroundImageData;
-        final backgroundAssetPath = '${tempDir.path}/$backgroundAssetName';
-        File backFile = await File(backgroundAssetPath).create();
-        backFile.writeAsBytesSync(backgroundAssetAsList);
+      if (imagePath != null) {
+        File file = File(imagePath);
+        Uint8List bytes = file.readAsBytesSync();
+        var imagedata = bytes.buffer.asUint8List();
+        final tempDir = await getTemporaryDirectory();
+        String imageName = 'stickerAsset.png';
+        final Uint8List imageAsList = imagedata;
+        final imageDataPath = '${tempDir.path}/$imageName';
+        file = await File(imageDataPath).create();
+        file.writeAsBytesSync(imageAsList);
+        args = <String, dynamic>{"image": imageName, "content": contentText};
+      } else {
+        args = <String, dynamic>{"image": imagePath, "content": contentText};
       }
-
-      args = <String, dynamic>{
-        "stickerImage": stickerAssetName,
-        "backgroundImage": backgroundAssetName,
-        "backgroundTopColor": backgroundTopColor,
-        "backgroundBottomColor": backgroundBottomColor,
-        "attributionURL": attributionURL,
-      };
     }
-    final String response = await _channel.invokeMethod(
-      'shareInstagramStory',
-      args,
-    );
-    return response;
+    final String version =
+        await _channel.invokeMethod('shareInstagramStory', args);
+    return version;
   }
 
   static Future<String> shareFacebookStory(String contentText,

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 
 class SocialShare {
@@ -215,5 +216,130 @@ class SocialShare {
     file = await File(stickerAssetPath).create();
     file.writeAsBytesSync(stickerAssetAsList);
     return true;
+  }
+
+  static Future<String> shareTikTok(String contentText,
+      {String? imagePath}) async {
+    Map<String, dynamic> args;
+    if (Platform.isIOS) {
+      args = <String, dynamic>{"image": imagePath, "content": contentText};
+    } else {
+      if (imagePath != null) {
+        File file = File(imagePath);
+        Uint8List bytes = file.readAsBytesSync();
+        var imagedata = bytes.buffer.asUint8List();
+        final tempDir = await getTemporaryDirectory();
+        String imageName = 'stickerAsset.png';
+        final Uint8List imageAsList = imagedata;
+        final imageDataPath = '${tempDir.path}/$imageName';
+        file = await File(imageDataPath).create();
+        file.writeAsBytesSync(imageAsList);
+        args = <String, dynamic>{"image": imageName, "content": contentText};
+      } else {
+        args = <String, dynamic>{"image": imagePath, "content": contentText};
+      }
+    }
+    final String version = await _channel.invokeMethod('shareTikTok', args);
+    return version;
+  }
+
+  static Future<String> shareLine(String contentText,
+      {String? imagePath}) async {
+    Map<String, dynamic> args;
+    if (Platform.isIOS) {
+      args = <String, dynamic>{"image": imagePath, "content": contentText};
+    } else {
+      if (imagePath != null) {
+        File file = File(imagePath);
+        Uint8List bytes = file.readAsBytesSync();
+        var imagedata = bytes.buffer.asUint8List();
+        final tempDir = await getTemporaryDirectory();
+        String imageName = 'stickerAsset.png';
+        final Uint8List imageAsList = imagedata;
+        final imageDataPath = '${tempDir.path}/$imageName';
+        file = await File(imageDataPath).create();
+        file.writeAsBytesSync(imageAsList);
+        args = <String, dynamic>{"image": imageName, "content": contentText};
+      } else {
+        args = <String, dynamic>{"image": imagePath, "content": contentText};
+      }
+    }
+    final String version = await _channel.invokeMethod('shareLine', args);
+    return version;
+  }
+
+  static Future<String> shareLinkedin(String contentText,
+      {String? imagePath}) async {
+    Map<String, dynamic> args;
+    if (Platform.isIOS) {
+      args = <String, dynamic>{"image": imagePath, "content": contentText};
+    } else {
+      if (imagePath != null) {
+        File file = File(imagePath);
+        Uint8List bytes = file.readAsBytesSync();
+        var imagedata = bytes.buffer.asUint8List();
+        final tempDir = await getTemporaryDirectory();
+        String imageName = 'stickerAsset.png';
+        final Uint8List imageAsList = imagedata;
+        final imageDataPath = '${tempDir.path}/$imageName';
+        file = await File(imageDataPath).create();
+        file.writeAsBytesSync(imageAsList);
+        args = <String, dynamic>{"image": imageName, "content": contentText};
+      } else {
+        args = <String, dynamic>{"image": imagePath, "content": contentText};
+      }
+    }
+    final String version = await _channel.invokeMethod('shareLinkedin', args);
+    return version;
+  }
+
+  static Future<String> shareEmail(String contentText,
+      {String? imagePath}) async {
+    Map<String, dynamic> args;
+    if (Platform.isIOS) {
+      args = <String, dynamic>{"image": imagePath, "content": contentText};
+    } else {
+      if (imagePath != null) {
+        File file = File(imagePath);
+        Uint8List bytes = file.readAsBytesSync();
+        var imagedata = bytes.buffer.asUint8List();
+        final tempDir = await getTemporaryDirectory();
+        String imageName = 'stickerAsset.png';
+        final Uint8List imageAsList = imagedata;
+        final imageDataPath = '${tempDir.path}/$imageName';
+        file = await File(imageDataPath).create();
+        file.writeAsBytesSync(imageAsList);
+        args = <String, dynamic>{"image": imageName, "content": contentText};
+      } else {
+        args = <String, dynamic>{"image": imagePath, "content": contentText};
+      }
+    }
+    final String version = await _channel.invokeMethod('shareEmail', args);
+    return version;
+  }
+
+  static Future<String> shareWhatsappV1(String contentText,
+      {String? imagePath}) async {
+    Map<String, dynamic> args;
+    if (Platform.isIOS) {
+      args = <String, dynamic>{"image": imagePath, "content": contentText};
+    } else {
+      if (imagePath != null) {
+        File file = File(imagePath);
+        Uint8List bytes = file.readAsBytesSync();
+        var imagedata = bytes.buffer.asUint8List();
+        final tempDir = await getTemporaryDirectory();
+        String imageName = 'stickerAsset.png';
+        final Uint8List imageAsList = imagedata;
+        final imageDataPath = '${tempDir.path}/$imageName';
+        file = await File(imageDataPath).create();
+        file.writeAsBytesSync(imageAsList);
+        args = <String, dynamic>{"image": imageName, "content": contentText};
+      } else {
+        args = <String, dynamic>{"image": imagePath, "content": contentText};
+      }
+    }
+    final String version = await _channel.invokeMethod('shareWhatsapp', args);
+    return version;
   }
 }

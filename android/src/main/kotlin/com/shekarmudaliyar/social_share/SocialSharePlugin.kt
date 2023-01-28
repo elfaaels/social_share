@@ -244,7 +244,7 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             apps["telegram"] = packages.any  { it.packageName.toString().contentEquals("org.telegram.messenger") }
 
             result.success(apps)
-            
+
         } else if (call.method == "shareTikTok") {
             val content: String? = call.argument("content")
             val image: String? = call.argument("image")
@@ -277,19 +277,18 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
 
             if (image!=null) {
                 //check if  image is also provided
-                val imagefile =  File(registrar.activeContext().cacheDir,image)
-                val imageFileUri = FileProvider.getUriForFile(registrar.activeContext(), registrar.activeContext().applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
+                val imagefile =  File(activeContext!!.cacheDir,image)
+                val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
                 intent.type = "image/*"
                 intent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
-                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             } else {
                 intent.type = "text/plain";
             }
             intent.putExtra(Intent.EXTRA_TEXT, content)
             intent.setPackage("com.linkedin.android")
             val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
-            registrar.activeContext().startActivity(chooserIntent)
-            result.success("true")
+            activeContext!!.startActivity(chooserIntent)
+            result.success("success")
        } else if (call.method == "shareEmail") {
             //native share options
             val content: String? = call.argument("content")
@@ -297,21 +296,20 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             val intent = Intent()
             intent.action = Intent.ACTION_SEND
 
-            if (image!=null) {
+             if (image!=null) {
                 //check if  image is also provided
-                val imagefile =  File(registrar.activeContext().cacheDir,image)
-                val imageFileUri = FileProvider.getUriForFile(registrar.activeContext(), registrar.activeContext().applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
+                val imagefile =  File(activeContext!!.cacheDir,image)
+                val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
                 intent.type = "image/*"
                 intent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
-                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             } else {
                 intent.type = "text/plain";
             }
             intent.putExtra(Intent.EXTRA_TEXT, content)
             intent.setPackage("com.google.android.gm")
             val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
-            registrar.activeContext().startActivity(chooserIntent)
-            result.success("true") 
+            activeContext!!.startActivity(chooserIntent)
+            result.success("success") 
        } else if (call.method == "shareLine") {
             //native share options
             val content: String? = call.argument("content")
@@ -319,21 +317,20 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             val intent = Intent()
             intent.action = Intent.ACTION_SEND
 
-            if (image!=null) {
+             if (image!=null) {
                 //check if  image is also provided
-                val imagefile =  File(registrar.activeContext().cacheDir,image)
-                val imageFileUri = FileProvider.getUriForFile(registrar.activeContext(), registrar.activeContext().applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
+                val imagefile =  File(activeContext!!.cacheDir,image)
+                val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
                 intent.type = "image/*"
                 intent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
-                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             } else {
                 intent.type = "text/plain";
             }
             intent.putExtra(Intent.EXTRA_TEXT, content)
             intent.setPackage("jp.naver.line.android")
             val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
-            registrar.activeContext().startActivity(chooserIntent)
-            result.success("true")
+            activeContext!!.startActivity(chooserIntent)
+            result.success("success")
         } else {
             result.notImplemented()
         }

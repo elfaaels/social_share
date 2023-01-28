@@ -248,26 +248,23 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
         } else if (call.method == "shareTikTok") {
             val content: String? = call.argument("content")
             val image: String? = call.argument("image")
-            val tikTokIntent = Intent(Intent.ACTION_SEND)
-            tikTokIntent.type = "text/plain"
-            tikTokIntent.setPackage("com.ss.android.ugc.trill")
-            tikTokIntent.putExtra(Intent.EXTRA_TEXT, content)
+            val intent = Intent()
+            intent.action = Intent.ACTION_SEND            
+         
             if (image!=null) {
                 //check if  image is also provided
-                val imagefile =  File(registrar.activeContext().cacheDir,image)
-                val imageFileUri = FileProvider.getUriForFile(registrar.activeContext(), registrar.activeContext().applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
-                tikTokIntent = "image/*"
-                tikTokIntent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
-                tikTokIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                val imagefile =  File(activeContext!!.cacheDir,image)
+                val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
+                intent.type = "image/*"
+                intent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
             } else {
                 intent.type = "text/plain";
             }
-             try {
-                activity!!.startActivity(tikTokIntent)
-                result.success("success")
-            } catch (ex: ActivityNotFoundException) {
-                result.success("error")
-            }     
+            intent.putExtra(Intent.EXTRA_TEXT, content)
+            intent.setPackage("com.ss.android.ugc.trill")
+            val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
+            activeContext!!.startActivity(chooserIntent)
+            result.success("success")
         } else if (call.method == "shareLinkedin") {
             //native share options
             val content: String? = call.argument("content")

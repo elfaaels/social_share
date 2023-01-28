@@ -166,39 +166,18 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             result.success("success")
         } 
         else if (call.method == "shareWhatsapp") {
-            // null safety version
-            //shares content on WhatsApp
-            // val content: String? = call.argument("content")
-            // val whatsappIntent = Intent(Intent.ACTION_SEND)
-            // whatsappIntent.type = "text/plain"
-            // whatsappIntent.setPackage("com.whatsapp")
-            // whatsappIntent.putExtra(Intent.EXTRA_TEXT, content)
-            // try {
-            //     activity!!.startActivity(whatsappIntent)
-            //     result.success("success")
-            // } catch (ex: ActivityNotFoundException) {
-            //     result.success("error")
-            // }
+           //shares content on WhatsApp
             val content: String? = call.argument("content")
-            val image: String? = call.argument("image")
-            val intent = Intent()
-            intent.action = Intent.ACTION_SEND
-
-            if (image!=null) {
-                //check if  image is also provided
-                val imagefile =  File(registrar.activeContext().cacheDir,image)
-                val imageFileUri = FileProvider.getUriForFile(registrar.activeContext(), registrar.activeContext().applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
-                intent.type = "image/*"
-                intent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            } else {
-                intent.type = "text/plain";
+            val whatsappIntent = Intent(Intent.ACTION_SEND)
+            whatsappIntent.type = "text/plain"
+            whatsappIntent.setPackage("com.whatsapp")
+            whatsappIntent.putExtra(Intent.EXTRA_TEXT, content)
+            try {
+                activity!!.startActivity(whatsappIntent)
+                result.success("success")
+            } catch (ex: ActivityNotFoundException) {
+                result.success("error")
             }
-            intent.putExtra(Intent.EXTRA_TEXT, content)
-            intent.setPackage("com.whatsapp")
-            val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
-            registrar.activeContext().startActivity(chooserIntent)
-            result.success("true")
         } else if (call.method == "shareSms") {
             //shares content on sms
             val content: String? = call.argument("message")
@@ -265,37 +244,30 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             apps["telegram"] = packages.any  { it.packageName.toString().contentEquals("org.telegram.messenger") }
 
             result.success(apps)
+            
         } else if (call.method == "shareTikTok") {
-            //native share options
             val content: String? = call.argument("content")
             val image: String? = call.argument("image")
-            val intent = Intent()
-            intent.action = Intent.ACTION_SEND
-
+            val tikTokIntent = Intent(Intent.ACTION_SEND)
+            tikTokIntent.type = "text/plain"
+            tikTokIntent.setPackage("com.ss.android.ugc.trill")
+            tikTokIntent.putExtra(Intent.EXTRA_TEXT, content)
             if (image!=null) {
                 //check if  image is also provided
                 val imagefile =  File(registrar.activeContext().cacheDir,image)
                 val imageFileUri = FileProvider.getUriForFile(registrar.activeContext(), registrar.activeContext().applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
-                intent.type = "image/*"
-                intent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                tikTokIntent = "image/*"
+                tikTokIntent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
+                tikTokIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             } else {
                 intent.type = "text/plain";
             }
-            intent.putExtra(Intent.EXTRA_TEXT, content)
-            intent.setPackage("com.ss.android.ugc.trill")
-            val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
-            registrar.activeContext().startActivity(chooserIntent)
-            result.success("true")
-            //create chooser intent to launch intent
-            //source: "share" package by flutter (https://github.com/flutter/plugins/blob/master/packages/share/)
-            //try {
-                //registrar.activity().startActivity(intent)
-               /// result.success("true")
-            //} catch (ex: ActivityNotFoundException) {
-                //result.success("false")
-            //}
-
+             try {
+                activity!!.startActivity(tikTokIntent)
+                result.success("success")
+            } catch (ex: ActivityNotFoundException) {
+                result.success("error")
+            }     
         } else if (call.method == "shareLinkedin") {
             //native share options
             val content: String? = call.argument("content")

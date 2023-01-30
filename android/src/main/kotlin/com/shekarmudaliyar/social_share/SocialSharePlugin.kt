@@ -291,7 +291,7 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             val chooserIntent: Intent = Intent.createChooser(emailIntent, null /* dialog title optional */)
             chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             try {
-                activity!!.startActivity(emailIntent)
+                activity!!.startActivity(chooserIntent)
                 result.success("success")
             } catch (ex: ActivityNotFoundException) {
                 result.success("error")

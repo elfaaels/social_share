@@ -246,69 +246,32 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             result.success(apps)
 
         } else if (call.method == "shareTikTok") {
-            // V1
+           // Shares content on TikTok
             val content: String? = call.argument("content")
-            val image: String? = call.argument("image")
-            val intent = Intent()
-            intent.action = Intent.ACTION_SEND            
-         
-            if (image!=null) {
-                //check if  image is also provided
-                val imagefile =  File(activeContext!!.cacheDir,image)
-                val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
-                intent.type = "image/*"
-                intent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
-            } else {
-                intent.type = "text/plain";
+            val tiktokIntent = Intent(Intent.ACTION_SEND)
+            tiktokIntent.type = "text/plain"
+            tiktokIntent.setPackage("com.ss.android.ugc.trill")
+            tiktokIntent.putExtra(Intent.EXTRA_TEXT, content)
+            try {
+                activity!!.startActivity(tiktokIntent)
+                result.success("success")
+            } catch (ex: ActivityNotFoundException) {
+                result.success("error")
             }
-            intent.putExtra(Intent.EXTRA_TEXT, content)
-            intent.setPackage("com.ss.android.ugc.trill")
-            val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
-            activeContext!!.startActivity(chooserIntent)
-            result.success("success")
         } else if (call.method == "shareLinkedin") {
-            //native share options
             val content: String? = call.argument("content")
-            val image: String? = call.argument("image")
-            val intent = Intent()
-            intent.action = Intent.ACTION_SEND
-
-            if (image!=null) {
-                //check if  image is also provided
-                val imagefile =  File(activeContext!!.cacheDir,image)
-                val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
-                intent.type = "image/*"
-                intent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
-            } else {
-                intent.type = "text/plain";
+            val linkedinIntent = Intent(Intent.ACTION_SEND)
+            linkedinIntent.type = "text/plain"
+            linkedinIntent.setPackage("com.linkedin.android")
+            linkedinIntent.putExtra(Intent.EXTRA_TEXT, content)
+            try {
+                activity!!.startActivity(linkedinIntent)
+                result.success("success")
+            } catch (ex: ActivityNotFoundException) {
+                result.success("error")
             }
-            intent.putExtra(Intent.EXTRA_TEXT, content)
-            intent.setPackage("com.linkedin.android")
-            val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
-            activeContext!!.startActivity(chooserIntent)
-            result.success("success")
        } else if (call.method == "shareEmail") {
-           // V1
-            // val content: String? = call.argument("content")
-            // val image: String? = call.argument("image")
-            // val intent = Intent()
-            // intent.action = Intent.ACTION_SEND
-
-            //  if (image!=null) {
-            //     //check if  image is also provided
-            //     val imagefile =  File(activeContext!!.cacheDir,image)
-            //     val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
-            //     intent.type = "image/*"
-            //     intent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
-            // } else {
-            //     intent.type = "text/plain";
-            // }
-            // intent.putExtra(Intent.EXTRA_TEXT, content)
-            // intent.setPackage("com.google.android.gm")
-            // val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
-            // activeContext!!.startActivity(chooserIntent)
-            // result.success("success") 
-            // V2 
+            // Shares content on Email/Gmail
             val content: String? = call.argument("content")
             val emailIntent = Intent(Intent.ACTION_SEND)
             emailIntent.type = "text/plain"
@@ -321,26 +284,18 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
                 result.success("error")
             }
        } else if (call.method == "shareLine") {
-            //native share options
+            // Shares content on Line
             val content: String? = call.argument("content")
-            val image: String? = call.argument("image")
-            val intent = Intent()
-            intent.action = Intent.ACTION_SEND
-
-             if (image!=null) {
-                //check if  image is also provided
-                val imagefile =  File(activeContext!!.cacheDir,image)
-                val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
-                intent.type = "image/*"
-                intent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
-            } else {
-                intent.type = "text/plain";
+            val lineIntent = Intent(Intent.ACTION_SEND)
+            lineIntent.type = "text/plain"
+            lineIntent.setPackage("jp.naver.line.android")
+            lineIntent.putExtra(Intent.EXTRA_TEXT, content)
+            try {
+                activity!!.startActivity(lineIntent)
+                result.success("success")
+            } catch (ex: ActivityNotFoundException) {
+                result.success("error")
             }
-            intent.putExtra(Intent.EXTRA_TEXT, content)
-            intent.setPackage("jp.naver.line.android")
-            val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
-            activeContext!!.startActivity(chooserIntent)
-            result.success("success")
         } else {
             result.notImplemented()
         }

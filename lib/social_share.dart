@@ -218,68 +218,27 @@ class SocialShare {
     return true;
   }
 
-  static Future<String?> shareTikTok(String contentText,
+  static Future<String?> shareTikTok(String content,
       {String? imagePath}) async {
-    Map<String, dynamic> args;
-    var _imagePath = imagePath;
-    if (Platform.isAndroid) {
-      if (imagePath != null) {
-        var stickerFilename = "stickerAsset.png";
-        await reSaveImage(imagePath, stickerFilename);
-        _imagePath = stickerFilename;
-      }
-    }
-    args = <String, dynamic>{"image": _imagePath, "content": contentText};
-    final String? version = await _channel.invokeMethod('shareTikTok', args);
+    final Map<String, dynamic> args = <String, dynamic>{"content": content};
+    final String? version = await _channel.invokeMethod('shareTiktok', args);
     return version;
   }
 
-  static Future<String?> shareLine(String contentText,
-      {String? imagePath}) async {
-    Map<String, dynamic> args;
-    var _imagePath = imagePath;
-    if (Platform.isAndroid) {
-      if (imagePath != null) {
-        var stickerFilename = "stickerAsset.png";
-        await reSaveImage(imagePath, stickerFilename);
-        _imagePath = stickerFilename;
-      }
-    }
-    args = <String, dynamic>{"image": _imagePath, "content": contentText};
+  static Future<String?> shareLine(String content, {String? imagePath}) async {
+    final Map<String, dynamic> args = <String, dynamic>{"content": content};
     final String? version = await _channel.invokeMethod('shareLine', args);
     return version;
   }
 
-  static Future<String?> shareLinkedin(String contentText,
+  static Future<String?> shareLinkedin(String content,
       {String? imagePath}) async {
-    Map<String, dynamic> args;
-    var _imagePath = imagePath;
-    if (Platform.isAndroid) {
-      if (imagePath != null) {
-        var stickerFilename = "stickerAsset.png";
-        await reSaveImage(imagePath, stickerFilename);
-        _imagePath = stickerFilename;
-      }
-    }
-    args = <String, dynamic>{"image": _imagePath, "content": contentText};
+    final Map<String, dynamic> args = <String, dynamic>{"content": content};
     final String? version = await _channel.invokeMethod('shareLinkedin', args);
     return version;
   }
 
   static Future<String?> shareEmail(String content, {String? imagePath}) async {
-    // V1
-    // Map<String, dynamic> args;
-    // var _imagePath = imagePath;
-    // if (Platform.isAndroid) {
-    //   if (imagePath != null) {
-    //     var stickerFilename = "stickerAsset.png";
-    //     await reSaveImage(imagePath, stickerFilename);
-    //     _imagePath = stickerFilename;
-    //   }
-    // }
-    // args = <String, dynamic>{"image": _imagePath, "content": contentText};
-    // final String? version = await _channel.invokeMethod('shareEmail', args);
-    // return version;
     final Map<String, dynamic> args = <String, dynamic>{"content": content};
     final String? version = await _channel.invokeMethod('shareEmail', args);
     return version;

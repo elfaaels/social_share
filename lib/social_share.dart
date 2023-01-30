@@ -91,40 +91,38 @@ class SocialShare {
   }
 
   static Future<String?> shareTwitter(
-    String content, {
-    String? imagePath,
+    String captionText, {
+    List<String>? hashtags,
+    String? url,
+    String? trailingText,
   }) async {
     //Caption
-    // var _captionText = captionText;
-    //Hashtags
-    // if (hashtags != null && hashtags.isNotEmpty) {
-    //   final tags = hashtags.map((t) => '#$t ').join(' ');
-    //   _captionText = _captionText + "\n" + tags.toString();
-    // }
+    var _captionText = captionText;
 
-    // //Url
-    // String _url;
-    // if (url != null) {
-    //   if (Platform.isAndroid) {
-    //     _url = Uri.parse(url).toString().replaceAll('#', "%23");
-    //   } else {
-    //     _url = Uri.parse(url).toString();
-    //   }
-    //   _captionText = _captionText + "\n" + _url;
-    // }
-    // if (trailingText != null) {
-    //   _captionText = _captionText + "\n" + trailingText;
-    // }
-    Map<String, dynamic> args;
-    var _imagePath = imagePath;
-    if (Platform.isAndroid) {
-      if (imagePath != null) {
-        var stickerFilename = "stickerAsset.png";
-        await reSaveImage(imagePath, stickerFilename);
-        _imagePath = stickerFilename;
-      }
+    //Hashtags
+    if (hashtags != null && hashtags.isNotEmpty) {
+      final tags = hashtags.map((t) => '#$t ').join(' ');
+      _captionText = _captionText + "\n" + tags.toString();
     }
-    args = <String, dynamic>{"image": _imagePath, "content": content};
+
+    //Url
+    String _url;
+    if (url != null) {
+      if (Platform.isAndroid) {
+        _url = Uri.parse(url).toString().replaceAll('#', "%23");
+      } else {
+        _url = Uri.parse(url).toString();
+      }
+      _captionText = _captionText + "\n" + _url;
+    }
+
+    if (trailingText != null) {
+      _captionText = _captionText + "\n" + trailingText;
+    }
+
+    Map<String, dynamic> args = <String, dynamic>{
+      "captionText": _captionText + " ",
+    };
     final String? version = await _channel.invokeMethod('shareTwitter', args);
     return version;
   }

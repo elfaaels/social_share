@@ -275,9 +275,7 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             val content: String? = call.argument("content")
             val image: String? = call.argument("image")
             val emailIntent = Intent(Intent.ACTION_SEND)
-            emailIntent.type = "text/plain"
-            emailIntent.setPackage("com.google.android.gm")
-            emailIntent.putExtra(Intent.EXTRA_TEXT, content)
+            // emailIntent.type = "text/plain"
 
             if (image!=null) {
                 //check if  image is also provided
@@ -288,7 +286,9 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             } else {
                 emailIntent.type = "text/plain";
             }
-            val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
+            emailIntent.putExtra(Intent.EXTRA_TEXT, content)
+            emailIntent.setPackage("com.google.android.gm")
+            val chooserIntent: Intent = Intent.createChooser(emailIntent, null /* dialog title optional */)
             chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             try {
                 activity!!.startActivity(emailIntent)

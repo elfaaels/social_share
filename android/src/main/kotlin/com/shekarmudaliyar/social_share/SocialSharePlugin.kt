@@ -209,10 +209,10 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             //shares content on twitter
             val text: String? = call.argument("captionText")
             val image: String? = call.argument("image")
-            // val twitterIntent = Intent(Intent.ACTION_SEND)
-            val intent = Intent(Intent.ACTION_VIEW)
-            val urlScheme = "http://www.twitter.com/intent/tweet?text=${URLEncoder.encode(text, Charsets.UTF_8.name())}"
-            Log.d("", urlScheme)
+            val intent = Intent(Intent.ACTION_SEND)
+            // val intent = Intent(Intent.ACTION_VIEW)
+            // val urlScheme = "http://www.twitter.com/intent/tweet?text=${URLEncoder.encode(text, Charsets.UTF_8.name())}"
+            // Log.d("", urlScheme)
 
             if (image!=null) {
                 //check if  image is also provided
@@ -222,11 +222,11 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
                 intent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             } else {
-                intent.type = "text/plain";
+                intent.type = "text/*";
             }
-            // twitterIntent.putExtra(Intent.EXTRA_TEXT, captionText)
-            // twitterIntent.setPackage("com.twitter.android")
-            intent.data = Uri.parse(urlScheme)
+            intent.putExtra(Intent.EXTRA_TEXT, text)
+            intent.setPackage("com.twitter.android")
+            // intent.data = Uri.parse(urlScheme)
             val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
             chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             try {

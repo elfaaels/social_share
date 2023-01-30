@@ -92,30 +92,30 @@ class SocialShare {
 
   static Future<String?> shareTwitter(
     String captionText, {
-    List<String>? hashtags,
-    String? url,
-    String? trailingText,
+    // List<String>? hashtags,
+    // String? url,
+    // String? trailingText,
     String? imagePath,
   }) async {
     //Caption
     var _captionText = captionText;
 
     //Hashtags
-    if (hashtags != null && hashtags.isNotEmpty) {
-      final tags = hashtags.map((t) => '#$t ').join(' ');
-      _captionText = _captionText + "\n" + tags.toString();
-    }
+    // if (hashtags != null && hashtags.isNotEmpty) {
+    //   final tags = hashtags.map((t) => '#$t ').join(' ');
+    //   _captionText = _captionText + "\n" + tags.toString();
+    // }
 
     //Url
-    String _url;
-    if (url != null) {
-      if (Platform.isAndroid) {
-        _url = Uri.parse(url).toString().replaceAll('#', "%23");
-      } else {
-        _url = Uri.parse(url).toString();
-      }
-      _captionText = _captionText + "\n" + _url;
-    }
+    // String _url;
+    // if (url != null) {
+    //   if (Platform.isAndroid) {
+    //     _url = Uri.parse(url).toString().replaceAll('#', "%23");
+    //   } else {
+    //     _url = Uri.parse(url).toString();
+    //   }
+    //   _captionText = _captionText + "\n" + _url;
+    // }
 
     // image
     var _imagePath = imagePath;
@@ -127,11 +127,11 @@ class SocialShare {
       }
     }
 
-    if (trailingText != null) {
-      _captionText = _captionText + "\n" + trailingText;
-    }
+    // if (trailingText != null) {
+    //   _captionText = _captionText + "\n" + trailingText;
+    // }
     Map<String, dynamic> args = <String, dynamic>{
-      "captionText": _captionText + " ",
+      "captionText": _captionText,
       "image": _imagePath,
     };
     final String? version = await _channel.invokeMethod('shareTwitter', args);

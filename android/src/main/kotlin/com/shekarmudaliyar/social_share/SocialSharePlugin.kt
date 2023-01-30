@@ -168,12 +168,25 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
         else if (call.method == "shareWhatsapp") {
            //shares content on WhatsApp
             val content: String? = call.argument("content")
+            val image: String? = call.argument("image")
             val whatsappIntent = Intent(Intent.ACTION_SEND)
-            whatsappIntent.type = "text/plain"
-            whatsappIntent.setPackage("com.whatsapp")
+
+            if (image!=null) {
+                //check if  image is also provided
+                val imagefile =  File(activeContext!!.cacheDir,image)
+                val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
+                whatsappIntent.type = "image/*"
+                whatsappIntent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
+                whatsappIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            } else {
+                 whatsappIntent.type = "text/plain"
+            }
             whatsappIntent.putExtra(Intent.EXTRA_TEXT, content)
+            whatsappIntent.setPackage("com.whatsapp")
+            val chooserIntent: Intent = Intent.createChooser(whatsappIntent, null /* dialog title optional */)
+            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             try {
-                activity!!.startActivity(whatsappIntent)
+                activity!!.startActivity(chooserIntent)
                 result.success("success")
             } catch (ex: ActivityNotFoundException) {
                 result.success("error")
@@ -195,13 +208,28 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
         } else if (call.method == "shareTwitter") {
             //shares content on twitter
             val text: String? = call.argument("captionText")
-            val urlScheme = "http://www.twitter.com/intent/tweet?text=${URLEncoder.encode(text, Charsets.UTF_8.name())}"
-            Log.d("", urlScheme)
-
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(urlScheme)
+            val image: String? = call.argument("image")
+            val twitterIntent = Intent(Intent.ACTION_SEND)
+            // val urlScheme = "http://www.twitter.com/intent/tweet?text=${URLEncoder.encode(text, Charsets.UTF_8.name())}"
+            // Log.d("", urlScheme)
+            // val intent = Intent(Intent.ACTION_VIEW)
+            // intent.data = Uri.parse(urlScheme)
+            if (image!=null) {
+                //check if  image is also provided
+                val imagefile =  File(activeContext!!.cacheDir,image)
+                val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
+                twitterIntent.type = "image/*"
+                twitterIntent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
+                twitterIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            } else {
+                twitterIntent.type = "text/plain";
+            }
+            twitterIntent.putExtra(Intent.EXTRA_TEXT, content)
+            twitterIntent.setPackage("com.twitter.android")
+            val chooserIntent: Intent = Intent.createChooser(twitterIntent, null /* dialog title optional */)
+            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             try {
-                activity!!.startActivity(intent)
+                activity!!.startActivity(chooserIntent)
                 result.success("success")
             } catch (ex: ActivityNotFoundException) {
                 result.success("error")
@@ -210,12 +238,25 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
         else if (call.method == "shareTelegram") {
             //shares content on Telegram
             val content: String? = call.argument("content")
+            val image: String? = call.argument("image")
             val telegramIntent = Intent(Intent.ACTION_SEND)
-            telegramIntent.type = "text/plain"
-            telegramIntent.setPackage("org.telegram.messenger")
+            
+            if (image!=null) {
+                //check if  image is also provided
+                val imagefile =  File(activeContext!!.cacheDir,image)
+                val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
+                telegramIntent.type = "image/*"
+                telegramIntent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
+                telegramIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            } else {
+                telegramIntent.type = "text/plain"
+            }
             telegramIntent.putExtra(Intent.EXTRA_TEXT, content)
+            telegramIntent.setPackage("org.telegram.messenger")
+            val chooserIntent: Intent = Intent.createChooser(telegramIntent, null /* dialog title optional */)
+            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             try {
-                activity!!.startActivity(telegramIntent)
+                activity!!.startActivity(chooserIntent)
                 result.success("success")
             } catch (ex: ActivityNotFoundException) {
                 result.success("error")
@@ -246,26 +287,53 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             result.success(apps)
 
         } else if (call.method == "shareTikTok") {
-           // Shares content on TikTok
+           // Shares content on TikTok           
             val content: String? = call.argument("content")
+            val image: String? = call.argument("image")
             val tiktokIntent = Intent(Intent.ACTION_SEND)
-            tiktokIntent.type = "text/plain"
-            tiktokIntent.setPackage("com.ss.android.ugc.trill")
+
+            if (image!=null) {
+                //check if  image is also provided
+                val imagefile =  File(activeContext!!.cacheDir,image)
+                val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
+                tiktokIntent.type = "image/*"
+                tiktokIntent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
+                tiktokIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            } else {
+                tiktokIntent.type = "text/plain"
+            }
             tiktokIntent.putExtra(Intent.EXTRA_TEXT, content)
+            tiktokIntent.setPackage("com.ss.android.ugc.trill")
+            val chooserIntent: Intent = Intent.createChooser(tiktokIntent, null /* dialog title optional */)
+            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             try {
-                activity!!.startActivity(tiktokIntent)
+                activity!!.startActivity(chooserIntent)
                 result.success("success")
             } catch (ex: ActivityNotFoundException) {
                 result.success("error")
             }
         } else if (call.method == "shareLinkedin") {
+            // Shares content on Linkedin
             val content: String? = call.argument("content")
+            val image: String? = call.argument("image")
             val linkedinIntent = Intent(Intent.ACTION_SEND)
-            linkedinIntent.type = "text/plain"
-            linkedinIntent.setPackage("com.linkedin.android")
+
+            if (image!=null) {
+                //check if  image is also provided
+                val imagefile =  File(activeContext!!.cacheDir,image)
+                val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
+                linkedinIntent.type = "image/*"
+                linkedinIntent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
+                linkedinIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            } else {
+                linkedinIntent.type = "text/plain"
+            }
             linkedinIntent.putExtra(Intent.EXTRA_TEXT, content)
+            linkedinIntent.setPackage("com.linkedin.android")
+            val chooserIntent: Intent = Intent.createChooser(linkedinIntent, null /* dialog title optional */)
+            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             try {
-                activity!!.startActivity(linkedinIntent)
+                activity!!.startActivity(chooserIntent)
                 result.success("success")
             } catch (ex: ActivityNotFoundException) {
                 result.success("error")
@@ -275,7 +343,6 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             val content: String? = call.argument("content")
             val image: String? = call.argument("image")
             val emailIntent = Intent(Intent.ACTION_SEND)
-            // emailIntent.type = "text/plain"
 
             if (image!=null) {
                 //check if  image is also provided
@@ -283,6 +350,7 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
                 val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
                 emailIntent.type = "image/*"
                 emailIntent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
+                emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             } else {
                 emailIntent.type = "text/plain";
             }
@@ -299,12 +367,25 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
        } else if (call.method == "shareLine") {
             // Shares content on Line
             val content: String? = call.argument("content")
+            val image: String? = call.argument("image")
             val lineIntent = Intent(Intent.ACTION_SEND)
-            lineIntent.type = "text/plain"
-            lineIntent.setPackage("jp.naver.line.android")
+
+             if (image!=null) {
+                //check if  image is also provided
+                val imagefile =  File(activeContext!!.cacheDir,image)
+                val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
+                lineIntent.type = "image/*"
+                lineIntent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
+                lineIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            } else {
+                lineIntent.type = "text/plain"
+            }
             lineIntent.putExtra(Intent.EXTRA_TEXT, content)
+            lineIntent.setPackage("jp.naver.line.android")
+            val chooserIntent: Intent = Intent.createChooser(lineIntent, null /* dialog title optional */)
+            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             try {
-                activity!!.startActivity(lineIntent)
+                activity!!.startActivity(chooserIntent)
                 result.success("success")
             } catch (ex: ActivityNotFoundException) {
                 result.success("error")

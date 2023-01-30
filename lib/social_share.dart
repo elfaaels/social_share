@@ -95,6 +95,7 @@ class SocialShare {
     List<String>? hashtags,
     String? url,
     String? trailingText,
+    String? imagePath,
   }) async {
     //Caption
     var _captionText = captionText;
@@ -116,12 +117,22 @@ class SocialShare {
       _captionText = _captionText + "\n" + _url;
     }
 
+    // image
+    var _imagePath = imagePath;
+    if (Platform.isAndroid) {
+      if (imagePath != null) {
+        var stickerFilename = "stickerAsset.png";
+        await reSaveImage(imagePath, stickerFilename);
+        _imagePath = stickerFilename;
+      }
+    }
+
     if (trailingText != null) {
       _captionText = _captionText + "\n" + trailingText;
     }
-
     Map<String, dynamic> args = <String, dynamic>{
       "captionText": _captionText + " ",
+      "image": _imagePath,
     };
     final String? version = await _channel.invokeMethod('shareTwitter', args);
     return version;

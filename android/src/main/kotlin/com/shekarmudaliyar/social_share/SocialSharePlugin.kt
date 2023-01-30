@@ -208,44 +208,33 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
         } else if (call.method == "shareTwitter") {
             //shares content on twitter
             val text: String? = call.argument("captionText")
+            val image: String? = call.argument("image")
+            // val twitterIntent = Intent(Intent.ACTION_SEND)
+            val intent = Intent(Intent.ACTION_VIEW)
             val urlScheme = "http://www.twitter.com/intent/tweet?text=${URLEncoder.encode(text, Charsets.UTF_8.name())}"
             Log.d("", urlScheme)
 
-            val intent = Intent(Intent.ACTION_VIEW)
+            if (image!=null) {
+                //check if  image is also provided
+                val imagefile =  File(activeContext!!.cacheDir,image)
+                val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
+                intent.type = "image/*"
+                intent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            } else {
+                intent.type = "text/plain";
+            }
+            // twitterIntent.putExtra(Intent.EXTRA_TEXT, captionText)
+            // twitterIntent.setPackage("com.twitter.android")
             intent.data = Uri.parse(urlScheme)
+            val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
+            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             try {
-                activity!!.startActivity(intent)
+                activity!!.startActivity(chooserIntent)
                 result.success("success")
             } catch (ex: ActivityNotFoundException) {
                 result.success("error")
             }
-            // val text: String? = call.argument("content")
-            // val image: String? = call.argument("image")
-            // val twitterIntent = Intent(Intent.ACTION_SEND)
-            // // val urlScheme = "http://www.twitter.com/intent/tweet?text=${URLEncoder.encode(text, Charsets.UTF_8.name())}"
-            // // Log.d("", urlScheme)
-            // // val intent = Intent(Intent.ACTION_VIEW)
-            // // intent.data = Uri.parse(urlScheme)
-            // if (image!=null) {
-            //     //check if  image is also provided
-            //     val imagefile =  File(activeContext!!.cacheDir,image)
-            //     val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
-            //     twitterIntent.type = "image/*"
-            //     twitterIntent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
-            //     twitterIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            // } else {
-            //     twitterIntent.type = "text/plain";
-            // }
-            // twitterIntent.putExtra(Intent.EXTRA_TEXT, content)
-            // twitterIntent.setPackage("com.twitter.android")
-            // val chooserIntent: Intent = Intent.createChooser(twitterIntent, null /* dialog title optional */)
-            // chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            // try {
-            //     activity!!.startActivity(chooserIntent)
-            //     result.success("success")
-            // } catch (ex: ActivityNotFoundException) {
-            //     result.success("error")
-            // }
         }
         else if (call.method == "shareTelegram") {
             //shares content on Telegram

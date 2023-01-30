@@ -224,7 +224,7 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             } else {
                 twitterIntent.type = "text/plain";
             }
-            twitterIntent.putExtra(Intent.EXTRA_TEXT, content)
+            twitterIntent.putExtra(Intent.EXTRA_TEXT, captionText)
             twitterIntent.setPackage("com.twitter.android")
             val chooserIntent: Intent = Intent.createChooser(twitterIntent, null /* dialog title optional */)
             chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

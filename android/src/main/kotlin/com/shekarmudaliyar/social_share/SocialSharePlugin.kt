@@ -273,10 +273,23 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
        } else if (call.method == "shareEmail") {
             // Shares content on Email/Gmail
             val content: String? = call.argument("content")
+            val image: String? = call.argument("image")
             val emailIntent = Intent(Intent.ACTION_SEND)
             emailIntent.type = "text/plain"
             emailIntent.setPackage("com.google.android.gm")
             emailIntent.putExtra(Intent.EXTRA_TEXT, content)
+
+            if (image!=null) {
+                //check if  image is also provided
+                val imagefile =  File(activeContext!!.cacheDir,image)
+                val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
+                emailIntent.type = "image/*"
+                emailIntent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
+            } else {
+                emailIntent.type = "text/plain";
+            }
+            val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
+            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             try {
                 activity!!.startActivity(emailIntent)
                 result.success("success")

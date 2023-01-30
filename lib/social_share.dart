@@ -221,7 +221,7 @@ class SocialShare {
   static Future<String?> shareTikTok(String content,
       {String? imagePath}) async {
     final Map<String, dynamic> args = <String, dynamic>{"content": content};
-    final String? version = await _channel.invokeMethod('shareTiktok', args);
+    final String? version = await _channel.invokeMethod('shareTikTok', args);
     return version;
   }
 
@@ -239,7 +239,17 @@ class SocialShare {
   }
 
   static Future<String?> shareEmail(String content, {String? imagePath}) async {
-    final Map<String, dynamic> args = <String, dynamic>{"content": content};
+    // final Map<String, dynamic> args = <String, dynamic>{"content": content};
+    Map<String, dynamic> args;
+    var _imagePath = imagePath;
+    if (Platform.isAndroid) {
+      if (imagePath != null) {
+        var stickerFilename = "stickerAsset.png";
+        await reSaveImage(imagePath, stickerFilename);
+        _imagePath = stickerFilename;
+      }
+    }
+    args = <String, dynamic>{"image": _imagePath, "content": content};
     final String? version = await _channel.invokeMethod('shareEmail', args);
     return version;
   }

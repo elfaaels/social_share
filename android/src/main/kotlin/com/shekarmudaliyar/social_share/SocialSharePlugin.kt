@@ -51,7 +51,10 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             // Shares content on Facebook
             val content: String? = call.argument("content")
             val image: String? = call.argument("image")
+            val attributionURL: String? = call.argument("attributionURL")
             val facebookIntent = Intent(Intent.ACTION_SEND)
+            val appName: String
+            appName = "com.facebook.katana";
 
             if (image!=null) {
                 //check if  image is also provided
@@ -61,9 +64,12 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
                 facebookIntent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
                 facebookIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             } else {
-                facebookIntent.type = "text/*";
+                facebookIntent.type = "text/plain";
             }
             facebookIntent.putExtra(Intent.EXTRA_TEXT, content)
+            facebookIntent.putExtra("content_url", attributionURL)
+            facebookIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            // activity!!.grantUriPermission(appName, Intent.FLAG_GRANT_READ_URI_PERMISSION)
             facebookIntent.setPackage("com.facebook.katana")
             val chooserIntent: Intent = Intent.createChooser(facebookIntent, null /* dialog title optional */)
             chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

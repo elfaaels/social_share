@@ -25,8 +25,11 @@ class SocialShare {
     return version;
   }
 
-  static Future<String?> shareFacebookStory(String? content,
-      {String? imagePath}) async {
+  static Future<String?> shareFacebookStory({
+    String? content,
+    String? imagePath,
+    String? attributionURL,
+  }) async {
     Map<String, dynamic> args;
     var _imagePath = imagePath;
     if (Platform.isAndroid) {
@@ -36,7 +39,11 @@ class SocialShare {
         _imagePath = stickerFilename;
       }
     }
-    args = <String, dynamic>{"image": _imagePath, "content": content};
+    args = <String, dynamic>{
+      "image": _imagePath,
+      "content": content,
+      "attributionURL": attributionURL,
+    };
     final String? version =
         await _channel.invokeMethod('shareFacebookStory', args);
     return version;

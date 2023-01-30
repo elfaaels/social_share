@@ -101,14 +101,14 @@ class _MyAppState extends State<MyApp> {
                           if (path == null) {
                             return;
                           }
-                          SocialShare.shareInstagramStory(
-                            appId: facebookId,
-                            imagePath: path,
-                            backgroundTopColor: "#ffffff",
-                            backgroundBottomColor: "#000000",
-                          ).then((data) {
-                            print(data);
-                          });
+                          // SocialShare.shareInstagramStory(
+                          //   appId: facebookId,
+                          //   imagePath: path,
+                          //   backgroundTopColor: "#ffffff",
+                          //   backgroundBottomColor: "#000000",
+                          // ).then((data) {
+                          //   print(data);
+                          // });
                         },
                       ),
                       SizedBox(width: 20),
@@ -119,13 +119,13 @@ class _MyAppState extends State<MyApp> {
                           if (path == null) {
                             return;
                           }
-                          SocialShare.shareInstagramStory(
-                            appId: facebookId,
-                            imagePath: path,
-                            backgroundResourcePath: imageBackgroundPath,
-                          ).then((data) {
-                            print(data);
-                          });
+                          // SocialShare.shareInstagramStory(
+                          //   appId: facebookId,
+                          //   imagePath: path,
+                          //   backgroundResourcePath: imageBackgroundPath,
+                          // ).then((data) {
+                          //   print(data);
+                          // });
                         },
                       ),
                       SizedBox(width: 20),
@@ -136,13 +136,13 @@ class _MyAppState extends State<MyApp> {
                           if (path == null) {
                             return;
                           }
-                          SocialShare.shareInstagramStory(
-                            appId: facebookId,
-                            imagePath: path,
-                            backgroundResourcePath: videoBackgroundPath,
-                          ).then((data) {
-                            print(data);
-                          });
+                          // SocialShare.shareInstagramStory(
+                          //   appId: facebookId,
+                          //   imagePath: path,
+                          //   backgroundResourcePath: videoBackgroundPath,
+                          // ).then((data) {
+                          //   print(data);
+                          // });
                         },
                       ),
                     ],
@@ -163,14 +163,14 @@ class _MyAppState extends State<MyApp> {
                           if (path == null) {
                             return;
                           }
-                          SocialShare.shareFacebookStory(
-                            appId: facebookId,
-                            imagePath: path,
-                            backgroundTopColor: "#ffffff",
-                            backgroundBottomColor: "#000000",
-                          ).then((data) {
-                            print(data);
-                          });
+                          // SocialShare.shareFacebookStory(
+                          //   appId: facebookId,
+                          //   imagePath: path,
+                          //   backgroundTopColor: "#ffffff",
+                          //   backgroundBottomColor: "#000000",
+                          // ).then((data) {
+                          //   print(data);
+                          // });
                         },
                       ),
                       SizedBox(width: 20),
@@ -181,13 +181,13 @@ class _MyAppState extends State<MyApp> {
                           if (path == null) {
                             return;
                           }
-                          SocialShare.shareFacebookStory(
-                            appId: facebookId,
-                            imagePath: path,
-                            backgroundResourcePath: imageBackgroundPath,
-                          ).then((data) {
-                            print(data);
-                          });
+                          // SocialShare.shareFacebookStory(
+                          //   appId: facebookId,
+                          //   imagePath: path,
+                          //   backgroundResourcePath: imageBackgroundPath,
+                          // ).then((data) {
+                          //   print(data);
+                          // });
                         },
                       ),
                       SizedBox(width: 20),
@@ -198,13 +198,13 @@ class _MyAppState extends State<MyApp> {
                           if (path == null) {
                             return;
                           }
-                          await SocialShare.shareFacebookStory(
-                            appId: facebookId,
-                            imagePath: path,
-                            backgroundResourcePath: videoBackgroundPath,
-                          ).then((data) {
-                            print(data);
-                          });
+                          // await SocialShare.shareFacebookStory(
+                          //   appId: facebookId,
+                          //   imagePath: path,
+                          //   backgroundResourcePath: videoBackgroundPath,
+                          // ).then((data) {
+                          //   print(data);
+                          // });
                         },
                       ),
                     ],
@@ -221,19 +221,19 @@ class _MyAppState extends State<MyApp> {
                       ElevatedButton(
                         child: Icon(Icons.text_fields),
                         onPressed: () async {
-                          SocialShare.shareTwitter(
-                            "This is Social Share twitter example with link.  ",
-                            hashtags: [
-                              "SocialSharePlugin",
-                              "world",
-                              "foo",
-                              "bar"
-                            ],
-                            url: "https://google.com/hello",
-                            trailingText: "cool!!",
-                          ).then((data) {
-                            print(data);
-                          });
+                          // SocialShare.shareTwitter(
+                          //   "This is Social Share twitter example with link.  ",
+                          //   hashtags: [
+                          //     "SocialSharePlugin",
+                          //     "world",
+                          //     "foo",
+                          //     "bar"
+                          //   ],
+                          //   url: "https://google.com/hello",
+                          //   trailingText: "cool!!",
+                          // ).then((data) {
+                          //   print(data);
+                          // });
                         },
                       ),
                     ],

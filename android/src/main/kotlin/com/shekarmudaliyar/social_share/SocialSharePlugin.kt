@@ -47,68 +47,56 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         activeContext = if (activity != null) activity!!.applicationContext else context!!
 
-        if (call.method == "shareInstagramStory" || call.method == "shareFacebookStory") {
+        if (call.method == "shareFacebookStory") {
+            // Shares content on Facebook
+            val content: String? = call.argument("content")
+            val image: String? = call.argument("image")
+            val facebookIntent = Intent(Intent.ACTION_SEND)
 
-            val destination : String
-            val appName : String
-            val intentString : String
-
-            if (call.method == "shareInstagramStory") {
-                destination = "com.instagram.sharedSticker"
-                appName = "com.instagram.android"
-                intentString = "com.instagram.share.ADD_TO_STORY"
+            if (image!=null) {
+                //check if  image is also provided
+                val imagefile =  File(activeContext!!.cacheDir,image)
+                val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
+                facebookIntent.type = "image/*"
+                facebookIntent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
+                facebookIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             } else {
-                destination = "com.facebook.sharedSticker";
-                appName = "com.facebook.katana";
-                intentString = "com.facebook.stories.ADD_TO_STORY"
+                facebookIntent.type = "text/plain";
             }
-
-            val stickerImage: String? = call.argument("stickerImage")
-            val backgroundTopColor: String? = call.argument("backgroundTopColor")
-            val backgroundBottomColor: String? = call.argument("backgroundBottomColor")
-            val attributionURL: String? = call.argument("attributionURL")
-            val backgroundImage: String? = call.argument("backgroundImage")
-            val backgroundVideo: String? = call.argument("backgroundVideo")
-
-            val file =  File(activeContext!!.cacheDir,stickerImage)
-            val stickerImageFile = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", file)
-            val appId: String? = call.argument("appId")
-
-            val intent = Intent(intentString)
-
-            intent.type = "image/*"
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            intent.putExtra("interactive_asset_uri", stickerImageFile)
-
-            if (call.method == "shareFacebookStory") {
-                intent.putExtra("com.facebook.platform.extra.APPLICATION_ID", appId)
-            }
-
-            if (backgroundImage!=null) {
-                //check if background image is also provided
-                val backfile =  File(activeContext!!.cacheDir,backgroundImage)
-                val backgroundImageFile = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", backfile)
-                intent.setDataAndType(backgroundImageFile,"image/*")
-            }
-
-            if (backgroundVideo!=null) {
-                //check if background video is also provided
-                val backfile =  File(activeContext!!.cacheDir,backgroundVideo)
-                val backgroundVideoFile = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", backfile)
-                intent.setDataAndType(backgroundVideoFile,"video/*")
-            }
-
-            intent.putExtra("source_application", appId)
-            intent.putExtra("content_url", attributionURL)
-            intent.putExtra("top_background_color", backgroundTopColor)
-            intent.putExtra("bottom_background_color", backgroundBottomColor)
-            // Instantiate activity and verify it will resolve implicit intent
-            activity!!.grantUriPermission(appName, stickerImageFile, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            if (activity!!.packageManager.resolveActivity(intent, 0) != null) {
-                activeContext!!.startActivity(intent)
+            facebookIntent.putExtra(Intent.EXTRA_TEXT, content)
+            facebookIntent.setPackage("com.facebook.katana")
+            val chooserIntent: Intent = Intent.createChooser(facebookIntent, null /* dialog title optional */)
+            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            try {
+                activity!!.startActivity(chooserIntent)
                 result.success("success")
+            } catch (ex: ActivityNotFoundException) {
+                result.success("error")
+            }
+        } else if (call.method == "shareInstagramStory") {
+            // shares content on Instagram
+            val content: String? = call.argument("content")
+            val image: String? = call.argument("image")
+            val instagramIntent = Intent(Intent.ACTION_SEND)
+
+            if (image!=null) {
+                //check if  image is also provided
+                val imagefile =  File(activeContext!!.cacheDir,image)
+                val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
+                instagramIntent.type = "image/*"
+                instagramIntent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
+                instagramIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             } else {
+                instagramIntent = "text/plain";
+            }
+            instagramIntent.putExtra(Intent.EXTRA_TEXT, content)
+            instagramIntent.setPackage("com.instagram.android")
+            val chooserIntent: Intent = Intent.createChooser(instagramIntent, null /* dialog title optional */)
+            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            try {
+                activity!!.startActivity(chooserIntent)
+                result.success("success")
+            } catch (ex: ActivityNotFoundException) {
                 result.success("error")
             }
         } else if (call.method == "shareOptions") {

@@ -8,42 +8,38 @@ import 'package:path_provider/path_provider.dart';
 class SocialShare {
   static const MethodChannel _channel = const MethodChannel('social_share');
 
-  static Future<String?> shareInstagramStory({
-    required String appId,
-    required String imagePath,
-    String? backgroundTopColor,
-    String? backgroundBottomColor,
-    String? backgroundResourcePath,
-    String? attributionURL,
-  }) async {
-    return shareMetaStory(
-      appId: appId,
-      platform: "shareInstagramStory",
-      imagePath: imagePath,
-      backgroundTopColor: backgroundTopColor,
-      backgroundBottomColor: backgroundBottomColor,
-      attributionURL: attributionURL,
-      backgroundResourcePath: backgroundResourcePath,
-    );
+  static Future<String?> shareInstagramStory(String? content,
+      {String? imagePath}) async {
+    Map<String, dynamic> args;
+    var _imagePath = imagePath;
+    if (Platform.isAndroid) {
+      if (imagePath != null) {
+        var stickerFilename = "stickerAsset.png";
+        await reSaveImage(imagePath, stickerFilename);
+        _imagePath = stickerFilename;
+      }
+    }
+    args = <String, dynamic>{"image": _imagePath, "content": content};
+    final String? version =
+        await _channel.invokeMethod('shareInstagramStory', args);
+    return version;
   }
 
-  static Future<String?> shareFacebookStory({
-    required String appId,
-    String? imagePath,
-    String? backgroundTopColor,
-    String? backgroundBottomColor,
-    String? backgroundResourcePath,
-    String? attributionURL,
-  }) async {
-    return shareMetaStory(
-      appId: appId,
-      platform: "shareFacebookStory",
-      imagePath: imagePath,
-      backgroundTopColor: backgroundTopColor,
-      backgroundBottomColor: backgroundBottomColor,
-      attributionURL: attributionURL,
-      backgroundResourcePath: backgroundResourcePath,
-    );
+  static Future<String?> shareFacebookStory(String? content,
+      {String? imagePath}) async {
+    Map<String, dynamic> args;
+    var _imagePath = imagePath;
+    if (Platform.isAndroid) {
+      if (imagePath != null) {
+        var stickerFilename = "stickerAsset.png";
+        await reSaveImage(imagePath, stickerFilename);
+        _imagePath = stickerFilename;
+      }
+    }
+    args = <String, dynamic>{"image": _imagePath, "content": content};
+    final String? version =
+        await _channel.invokeMethod('shareFacebookStory', args);
+    return version;
   }
 
   static Future<String?> shareMetaStory({
@@ -92,9 +88,6 @@ class SocialShare {
 
   static Future<String?> shareTwitter(
     String captionText, {
-    // List<String>? hashtags,
-    // String? url,
-    // String? trailingText,
     String? imagePath,
   }) async {
     //Caption

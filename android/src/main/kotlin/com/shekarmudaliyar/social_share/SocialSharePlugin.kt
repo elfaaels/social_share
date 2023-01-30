@@ -320,7 +320,6 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             } catch (ex: ActivityNotFoundException) {
                 result.success("error")
             }
-        }
        } else if (call.method == "shareLine") {
             //native share options
             val content: String? = call.argument("content")

@@ -61,7 +61,7 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
                 facebookIntent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
                 facebookIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             } else {
-                facebookIntent.type = "text/plain";
+                facebookIntent.type = "text/*";
             }
             facebookIntent.putExtra(Intent.EXTRA_TEXT, content)
             facebookIntent.setPackage("com.facebook.katana")
@@ -87,7 +87,7 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
                 instagramIntent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
                 instagramIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             } else {
-                instagramIntent = "text/plain";
+                instagramIntent.type = "text/*";
             }
             instagramIntent.putExtra(Intent.EXTRA_TEXT, content)
             instagramIntent.setPackage("com.instagram.android")

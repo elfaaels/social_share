@@ -91,11 +91,11 @@ class SocialShare {
   }
 
   static Future<String?> shareTwitter(
-    String captionText, {
+    String content, {
     String? imagePath,
   }) async {
     //Caption
-    var _captionText = captionText;
+    // var _captionText = captionText;
     //Hashtags
     // if (hashtags != null && hashtags.isNotEmpty) {
     //   final tags = hashtags.map((t) => '#$t ').join(' ');
@@ -124,7 +124,7 @@ class SocialShare {
         _imagePath = stickerFilename;
       }
     }
-    args = <String, dynamic>{"image": _imagePath, "captionText": _captionText};
+    args = <String, dynamic>{"image": _imagePath, "content": content};
     final String? version = await _channel.invokeMethod('shareTwitter', args);
     return version;
   }

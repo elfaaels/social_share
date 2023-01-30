@@ -207,7 +207,7 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             }
         } else if (call.method == "shareTwitter") {
             //shares content on twitter
-            val text: String? = call.argument("captionText")
+            val text: String? = call.argument("content")
             val image: String? = call.argument("image")
             val twitterIntent = Intent(Intent.ACTION_SEND)
             // val urlScheme = "http://www.twitter.com/intent/tweet?text=${URLEncoder.encode(text, Charsets.UTF_8.name())}"
@@ -224,7 +224,7 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             } else {
                 twitterIntent.type = "text/plain";
             }
-            twitterIntent.putExtra(Intent.EXTRA_TEXT, captionText)
+            twitterIntent.putExtra(Intent.EXTRA_TEXT, content)
             twitterIntent.setPackage("com.twitter.android")
             val chooserIntent: Intent = Intent.createChooser(twitterIntent, null /* dialog title optional */)
             chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

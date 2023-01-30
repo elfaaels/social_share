@@ -281,7 +281,7 @@ class SocialShare {
     // final String? version = await _channel.invokeMethod('shareEmail', args);
     // return version;
     final Map<String, dynamic> args = <String, dynamic>{"content": content};
-    final String? version = await _channel.invokeMethod('shareTelegram', args);
+    final String? version = await _channel.invokeMethod('shareEmail', args);
     return version;
   }
 }

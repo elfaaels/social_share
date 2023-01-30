@@ -266,19 +266,22 @@ class SocialShare {
     return version;
   }
 
-  static Future<String?> shareEmail(String contentText,
-      {String? imagePath}) async {
-    Map<String, dynamic> args;
-    var _imagePath = imagePath;
-    if (Platform.isAndroid) {
-      if (imagePath != null) {
-        var stickerFilename = "stickerAsset.png";
-        await reSaveImage(imagePath, stickerFilename);
-        _imagePath = stickerFilename;
-      }
-    }
-    args = <String, dynamic>{"image": _imagePath, "content": contentText};
-    final String? version = await _channel.invokeMethod('shareEmail', args);
+  static Future<String?> shareEmail(String content, {String? imagePath}) async {
+    // V1
+    // Map<String, dynamic> args;
+    // var _imagePath = imagePath;
+    // if (Platform.isAndroid) {
+    //   if (imagePath != null) {
+    //     var stickerFilename = "stickerAsset.png";
+    //     await reSaveImage(imagePath, stickerFilename);
+    //     _imagePath = stickerFilename;
+    //   }
+    // }
+    // args = <String, dynamic>{"image": _imagePath, "content": contentText};
+    // final String? version = await _channel.invokeMethod('shareEmail', args);
+    // return version;
+    final Map<String, dynamic> args = <String, dynamic>{"content": content};
+    final String? version = await _channel.invokeMethod('shareTelegram', args);
     return version;
   }
 }

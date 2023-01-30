@@ -246,6 +246,7 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             result.success(apps)
 
         } else if (call.method == "shareTikTok") {
+            // V1
             val content: String? = call.argument("content")
             val image: String? = call.argument("image")
             val intent = Intent()
@@ -287,26 +288,39 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             activeContext!!.startActivity(chooserIntent)
             result.success("success")
        } else if (call.method == "shareEmail") {
-            //native share options
-            val content: String? = call.argument("content")
-            val image: String? = call.argument("image")
-            val intent = Intent()
-            intent.action = Intent.ACTION_SEND
+           // V1
+            // val content: String? = call.argument("content")
+            // val image: String? = call.argument("image")
+            // val intent = Intent()
+            // intent.action = Intent.ACTION_SEND
 
-             if (image!=null) {
-                //check if  image is also provided
-                val imagefile =  File(activeContext!!.cacheDir,image)
-                val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
-                intent.type = "image/*"
-                intent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
-            } else {
-                intent.type = "text/plain";
+            //  if (image!=null) {
+            //     //check if  image is also provided
+            //     val imagefile =  File(activeContext!!.cacheDir,image)
+            //     val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
+            //     intent.type = "image/*"
+            //     intent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
+            // } else {
+            //     intent.type = "text/plain";
+            // }
+            // intent.putExtra(Intent.EXTRA_TEXT, content)
+            // intent.setPackage("com.google.android.gm")
+            // val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
+            // activeContext!!.startActivity(chooserIntent)
+            // result.success("success") 
+            // V2 
+            val content: String? = call.argument("content")
+            val emailIntent = Intent(Intent.ACTION_SEND)
+            emailIntent.type = "text/plain"
+            emailIntent.setPackage("com.google.android.gm")
+            emailIntent.putExtra(Intent.EXTRA_TEXT, content)
+            try {
+                activity!!.startActivity(emailIntent)
+                result.success("success")
+            } catch (ex: ActivityNotFoundException) {
+                result.success("error")
             }
-            intent.putExtra(Intent.EXTRA_TEXT, content)
-            intent.setPackage("com.google.android.gm")
-            val chooserIntent: Intent = Intent.createChooser(intent, null /* dialog title optional */)
-            activeContext!!.startActivity(chooserIntent)
-            result.success("success") 
+        }
        } else if (call.method == "shareLine") {
             //native share options
             val content: String? = call.argument("content")
